@@ -10,8 +10,8 @@ const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getMovies = (req, res, next) => {
   movie.find({})
-    .then((card) => res.status(200).send(
-      { card },
+    .then((movies) => res.status(200).send(
+      movies,
     ))
     .catch(next);
 };
@@ -19,8 +19,8 @@ module.exports.getMovies = (req, res, next) => {
 module.exports.createMovie = (req, res, next) => {
   const { _id } = req.user;
   movie.create({ ...req.body, owner: _id })
-    .then((card) => {
-      res.send(card);
+    .then((mov) => {
+      res.send(mov);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -33,15 +33,15 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   movie.findById(req.params.id)
-    .then((card) => {
-      if (!card) {
+    .then((mov) => {
+      if (!mov) {
         throw new NotFoundError(MESSAGE_404);
-      } else if (card.owner.toString() !== req.user._id.toString()) {
+      } else if (mov.owner.toString() !== req.user._id.toString()) {
         throw new ForbiddenError(MESSAGE_403);
       } else {
         movie.findByIdAndRemove(req.params.id)
-          .then((deletedCard) => {
-            res.send({ data: deletedCard });
+          .then((deletedMovie) => {
+            res.send(deletedMovie);
           });
       }
     })
