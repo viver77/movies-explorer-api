@@ -11,7 +11,7 @@ const ForbiddenError = require('../errors/forbidden-err');
 module.exports.getMovies = (req, res, next) => {
   movie.find({})
     .then((card) => res.status(200).send(
-      { data: card },
+      { card },
     ))
     .catch(next);
 };
