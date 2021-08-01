@@ -1,7 +1,8 @@
-// require('dotenv').config(); ошибка 502
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const {
   celebrate, Joi, errors,
 } = require('celebrate');
@@ -9,7 +10,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const usersRouter = require('./routes/users');
 const movieRouter = require('./routes/movie');
 const auth = require('./middlewares/auth');
-// const cors = require('./middlewares/cors');
 const { createUser, login } = require('./controllers/users');
 const NotFoundError = require('./errors/not-found-err');
 
@@ -25,14 +25,12 @@ mongoose.connect(MONGO_URL, {
   useFindAndModify: false,
 });
 
-// app.use(cors);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger); // подключаем логгер запросов
+app.use(helmet());
 
 // # проверяет переданные в теле почту и пароль
-// # и возвращает JWT
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().trim().email().required(),
