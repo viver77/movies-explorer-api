@@ -7,6 +7,7 @@ const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
 const routes = require('./routes');
+const cors = require('./middlewares/cors');
 
 const MESSAGE_404 = 'Запрашиваемый ресурс не найден';
 
@@ -19,6 +20,8 @@ mongoose.connect(MONGO_URL, {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(cors);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
