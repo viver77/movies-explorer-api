@@ -80,6 +80,7 @@ module.exports.login = (req, res, next) => {
       res.send({
         name: user.name,
         email: user.email,
+        id: user._id,
         token,
       });
     })
